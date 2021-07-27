@@ -29,7 +29,7 @@ def add_pokemon(folium_map, lat, lon, image_url=DEFAULT_IMAGE_URL):
 
 
 def show_all_pokemons(request):
-    pokemons = Pokemon.objects.all()
+    pokemons = Pokemon.objects.prefetch_related('entities').all()
 
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
     for pokemon in pokemons:
@@ -87,7 +87,7 @@ def show_pokemon(request, pokemon_id):
             'title_ru': pokemon.previous_evolution.title,
         }
 
-    next_evolution = pokemon.evolution.first()
+    next_evolution = pokemon.evolutions.first()
     if next_evolution:
         pokemon_data['next_evolution'] = {
             'pokemon_id': next_evolution.id,
